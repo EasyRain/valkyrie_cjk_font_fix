@@ -243,6 +243,41 @@ local function business_cards_module()
     return valkyrie and valkyrie._bc
 end
 
+local original_profile_class_name = nil
+
+-- Valkyrie returns hardcoded English class names for the known archetypes
+-- (Veteran, Zealot, Psyker, Ogryn, Arbites, Hive Scum, Skitarius). The game's
+-- archetype settings carry a localization key instead (e.g. "loc_class_veteran_name"),
+-- which the class selection screen uses. Prefer that official localized name
+-- (matches the game's UI in every language), fall back to valkyrie's logic.
+local function patched_profile_class_name(profile)
+    local localize_labels = mod:get("localize_labels")
+    if localize_labels == nil then
+        localize_labels = true
+    end
+    if not localize_labels then
+        return original_profile_class_name and original_profile_class_name(profile) or "Unknown"
+    end
+
+    local archetype = profile and profile.archetype
+    if not archetype then
+        return original_profile_class_name and original_profile_class_name(profile) or "Unknown"
+    end
+
+    if type(archetype.archetype_name) == "string" and archetype.archetype_name ~= "" then
+        local business_cards = business_cards_module()
+        local safe_localize = business_cards and business_cards.safe_localize
+        if safe_localize then
+            local ok, localized = pcall(safe_localize, archetype.archetype_name)
+            if ok and localized and localized ~= "None" and localized ~= archetype.archetype_name then
+                return localized
+            end
+        end
+    end
+
+    return original_profile_class_name and original_profile_class_name(profile) or "Unknown"
+end
+
 local function patch()
     local business_cards = business_cards_module()
     if not business_cards or type(business_cards.safe_draw_business_card_text) ~= "function" then
@@ -251,17 +286,27 @@ local function patch()
     if business_cards.safe_draw_business_card_text ~= patched_safe_draw_business_card_text then
         original_draw = business_cards.safe_draw_business_card_text
         business_cards.safe_draw_business_card_text = patched_safe_draw_business_card_text
-        mod:info("Patched valkyrie business card text rendering.")
     end
+    if type(business_cards.profile_class_name) == "function" and business_cards.profile_class_name ~= patched_profile_class_name then
+        original_profile_class_name = business_cards.profile_class_name
+        business_cards.profile_class_name = patched_profile_class_name
+    end
+    mod:info("Patched valkyrie business card text rendering.")
     return true
 end
 
 local function unpatch()
     local business_cards = business_cards_module()
-    if business_cards and business_cards.safe_draw_business_card_text == patched_safe_draw_business_card_text then
-        business_cards.safe_draw_business_card_text = original_draw
+    if business_cards then
+        if business_cards.safe_draw_business_card_text == patched_safe_draw_business_card_text then
+            business_cards.safe_draw_business_card_text = original_draw
+        end
+        if business_cards.profile_class_name == patched_profile_class_name then
+            business_cards.profile_class_name = original_profile_class_name
+        end
     end
     original_draw = nil
+    original_profile_class_name = nil
 end
 
 mod.on_all_mods_loaded = function()

@@ -14,6 +14,8 @@ While the CJK font extension **Show CJK Glyphs +** (`ShowCnJaKoGlyphsPlus`) is a
 
 *(Note: `UIRenderer.draw_text()` requires its trailing `options` argument to be a table — the renderer writes flags/color into it. Valkyrie's own internal `draw_text` fallback passes `nil` and would crash if it ever ran; this mod passes a proper table.)*
 
+Class names on the cards (Veteran, Zealot, Psyker, Ogryn, Arbites, Hive Scum, Skitarius) are hardcoded English in Valkyrie. This mod patches `profile_class_name` to prefer the game's own localized archetype name (`loc_class_*_name`, the same key the class selection screen uses), so the card class matches the game UI in every language — e.g. `Veteran` → `老兵` in Chinese.
+
 Pure ASCII strings keep Valkyrie's original font, so the vanilla look is preserved. When the CJK mod is disabled or missing, this mod does nothing and Valkyrie behaves exactly as before.
 
 ## Requirements
