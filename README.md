@@ -43,6 +43,8 @@ Pure ASCII strings keep Valkyrie's original font, so the vanilla look is preserv
 
 The mod's own UI (name, description, options) and all card texts (labels and `None`/`Unknown` fallback values) are fully translated into the 12 languages supported by the game: English, French, German, Italian, Spanish, Polish, Portuguese (BR), Russian, Japanese, Korean, Simplified Chinese and Traditional Chinese. Texts follow the game's current language setting.
 
+**Verified against the game's official localization data** (exported in-game via `Localizer.lookup`): Simplified Chinese, Traditional Chinese, Japanese and Korean — e.g. the Blitz label is `闪击：` / `閃擊：` / `電撃：` / `대공세：`, matching the official talent tree terminology. The remaining European languages are community translations and may differ slightly from the official ones.
+
 ## Notes
 
 - This patch wraps `mod._bc.safe_draw_business_card_text` from Valkyrie's business-cards module at load time. If you hot-reload Valkyrie through DMF while playing, toggle this mod off and on again (or restart the game) to re-apply the patch.
