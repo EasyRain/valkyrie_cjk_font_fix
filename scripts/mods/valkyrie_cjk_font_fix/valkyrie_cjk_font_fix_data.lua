@@ -12,6 +12,11 @@ return {
                 default_value = true,
             },
             {
+                setting_id = "localize_labels",
+                type = "checkbox",
+                default_value = true,
+            },
+            {
                 setting_id = "debug_logging",
                 type = "checkbox",
                 default_value = false,

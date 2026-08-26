@@ -34,6 +34,7 @@ Pure ASCII strings keep Valkyrie's original font, so the vanilla look is preserv
 | Setting | Default | Description |
 | --- | --- | --- |
 | Only redirect non-Latin text | On | When enabled, only strings containing non-Latin characters are re-rendered with the CJK-capable fallback font; pure ASCII strings keep Valkyrie's original font. Turn off to re-render all card text with the fallback font. |
+| Localize card labels | On | Translate the card labels (Name:, Class:, Special Ability:, Aura:, Blitz:, Keystone:, Melee:, Ranged:) to follow the game's current language. Supported: EN, FR, DE, IT, ES, PL, PT-BR, RU, JA, KO, ZH-CN, ZH-TW. Labels wider than their column are automatically downscaled to fit. |
 | Debug logging | Off | Log diagnostic information (locale, resolved font chains, draw results) to the console log. Only needed for troubleshooting. |
 
 ## Notes
