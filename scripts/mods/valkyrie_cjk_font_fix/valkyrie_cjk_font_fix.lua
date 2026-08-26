@@ -93,10 +93,12 @@ local function contains_non_latin(text)
     return text:find("[^\32-\126]") ~= nil
 end
 
--- Card label texts drawn by valkyrie's business cards, mapped to localization
--- keys defined in valkyrie_cjk_font_fix_localization.lua so the labels can
--- follow the game's current language.
-local CARD_LABEL_KEYS = {
+-- Card texts drawn by valkyrie's business cards that are hardcoded English,
+-- mapped to localization keys defined in valkyrie_cjk_font_fix_localization.lua
+-- so they can follow the game's current language. Covers the fixed labels
+-- ("Name:", "Class:", ...) and the fallback values ("None" when e.g. an
+-- Arbites has no Blitz selected, "Unknown" when a name/class is missing).
+local CARD_TEXT_KEYS = {
     ["Name:"] = "card_label_name",
     ["Class:"] = "card_label_class",
     ["Special Ability:"] = "card_label_special_ability",
@@ -105,6 +107,8 @@ local CARD_LABEL_KEYS = {
     ["Keystone:"] = "card_label_keystone",
     ["Melee:"] = "card_label_melee",
     ["Ranged:"] = "card_label_ranged",
+    ["None"] = "card_value_none",
+    ["Unknown"] = "card_value_unknown",
 }
 
 -- Shrink the font size if a (translated) label would be wider than its fixed
@@ -176,13 +180,14 @@ local function patched_safe_draw_business_card_text(ui_renderer, text, font_type
         localize_labels = true
     end
 
-    -- 1) Translate the fixed card labels ("Name:", "Class:", ...) so they
-    -- follow the game's current language. Independent of the CJK extension.
+    -- 1) Translate the fixed card texts (labels like "Name:", fallback values
+    -- like "None"/"Unknown") so they follow the game's current language.
+    -- Independent of the CJK extension.
     if original_draw and UIRenderer and localize_labels then
-        local label_key = CARD_LABEL_KEYS[text]
-        if label_key then
-            local localized = mod:localize(label_key)
-            if localized and localized ~= "" and localized ~= label_key and localized ~= text then
+        local text_key = CARD_TEXT_KEYS[text]
+        if text_key then
+            local localized = mod:localize(text_key)
+            if localized and localized ~= "" and localized ~= text_key and localized ~= text then
                 local draw_font_size = fit_label_font_size(ui_renderer, localized, font_type, font_size or BUSINESS_CARD_FONT_SIZE, width)
                 local ok, err = pcall(UIRenderer.draw_text, ui_renderer, localized,
                     draw_font_size,
@@ -191,7 +196,7 @@ local function patched_safe_draw_business_card_text(ui_renderer, text, font_type
                     Vector2(width, BUSINESS_CARD_LINE_HEIGHT),
                     color or BUSINESS_CARD_TEXT_COLOR,
                     shared_text_options)
-                dbg("label: %s -> %s (size=%s) ok=%s err=%s", text, tostring(localized), tostring(draw_font_size), tostring(ok), tostring(err))
+                dbg("text: %s -> %s (size=%s) ok=%s err=%s", text, tostring(localized), tostring(draw_font_size), tostring(ok), tostring(err))
                 if ok then
                     return
                 end
