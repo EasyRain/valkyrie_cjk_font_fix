@@ -37,6 +37,10 @@ Pure ASCII strings keep Valkyrie's original font, so the vanilla look is preserv
 | Localize card labels | On | Translate the card texts to follow the game's current language: labels (Name:, Class:, Special Ability:, Aura:, Blitz:, Keystone:, Melee:, Ranged:) and fallback values (None — e.g. an Arbites without a Blitz — and Unknown). Supported: EN, FR, DE, IT, ES, PL, PT-BR, RU, JA, KO, ZH-CN, ZH-TW. Texts wider than their column are automatically downscaled to fit. |
 | Debug logging | Off | Log diagnostic information (locale, resolved font chains, draw results) to the console log. Only needed for troubleshooting. |
 
+## Localization
+
+The mod's own UI (name, description, options) and all card texts (labels and `None`/`Unknown` fallback values) are fully translated into the 12 languages supported by the game: English, French, German, Italian, Spanish, Polish, Portuguese (BR), Russian, Japanese, Korean, Simplified Chinese and Traditional Chinese. Texts follow the game's current language setting.
+
 ## Notes
 
 - This patch wraps `mod._bc.safe_draw_business_card_text` from Valkyrie's business-cards module at load time. If you hot-reload Valkyrie through DMF while playing, toggle this mod off and on again (or restart the game) to re-apply the patch.
